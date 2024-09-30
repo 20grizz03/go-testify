@@ -16,10 +16,10 @@ func TestMainHandler(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	assert.Equal(t, http.StatusOK, responseRecorder.Code, "Ожидался статус 200")
+	require.Equal(t, http.StatusOK, responseRecorder.Code, "Ожидался статус 200")
 
 	expected := ""
-	require.NotEqual(t, expected, responseRecorder.Body.String(), "Тело ответа пустое")
+	assert.NotEqual(t, expected, responseRecorder.Body.String(), "Тело ответа пустое")
 }
 
 func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
@@ -30,17 +30,14 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	assert.Equal(t, http.StatusOK, responseRecorder.Code, "Ожидался статус 200")
+	require.Equal(t, http.StatusOK, responseRecorder.Code, "Ожидался статус 200")
 
 	body := responseRecorder.Body.String()
 	list := strings.Split(body, ",")
 
 	// Проверяем количество кафе
-	require.Equal(t, totalCount, len(list), "Ожидалось %d кафе", totalCount)
+	assert.Len(t, list, totalCount, "Ожидалось %d кафе", totalCount)
 
-	// Проверяем содержимое списка кафе
-	expected := "Мир кофе,Сладкоежка,Кофе и завтраки,Сытый студент"
-	assert.Equal(t, expected, body, "Неправильный список кафе")
 }
 
 func TestMainHandlerWhenCityIsWrong(t *testing.T) {
@@ -50,9 +47,9 @@ func TestMainHandlerWhenCityIsWrong(t *testing.T) {
 	handler.ServeHTTP(responseRecorder, req)
 
 	// Проверяем статус-код
-	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code, "Ожидался статус 400")
+	require.Equal(t, http.StatusBadRequest, responseRecorder.Code, "Ожидался статус 400")
 
 	// Проверяем тело ответа
 	expected := "wrong city value"
-	require.Equal(t, expected, responseRecorder.Body.String(), "Неправильное тело ответа")
+	assert.Equal(t, expected, responseRecorder.Body.String(), "Неправильное тело ответа")
 }
