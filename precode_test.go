@@ -53,3 +53,5 @@ func TestMainHandlerWhenCityIsWrong(t *testing.T) {
 	expected := "wrong city value"
 	assert.Equal(t, expected, responseRecorder.Body.String(), "Неправильное тело ответа")
 }
+
+//поправил
